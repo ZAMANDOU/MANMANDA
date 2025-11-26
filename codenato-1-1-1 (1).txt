@@ -1,0 +1,98 @@
+# Kani is to store data sa mga brand na phones
+brands = ["iPhone 11", "iPhone 12", "iPhone 13", "iPhone 14", "iPhone 15", 
+          "iPhone 16", "iPhone 17", "Xiaomi", "Redmi", "Samsung"]
+prices = [35000, 40000, 45000, 50000, 55000, 60000, 65000, 15000, 12000, 25000]
+stocks = [20] * len(brands)
+# This line here kay to Track orders and sales
+
+sales = 0
+
+# Default Owner login credentials dayun ni
+owner_username = "owner"
+owner_password = "1234"
+
+#  This line here is the Login Function dayun
+def login():
+    print("\n==== SOLIDMARK GADGETS HUB LOGIN ====")
+    username = input("Enter username: ")
+    password = input("Enter password: ")
+
+    if username == owner_username and password == owner_password:
+        print("Login successful! Welcome, Owner.")
+        return True
+    else:
+        print("Invalid login. Try again.")
+        return False
+
+# para maka display Menu
+def show_menu():
+    print("\n======= AVAILABLE PHONES =======")
+    print("No.\tBrand\t\tPrice\tStock")
+    print("--------------------------------")
+    for i in range(len(brands)):
+        print(f"{i+1}\t{brands[i]:<12}\t₱{prices[i]}\t{stocks[i]} in stock")
+    print("================================")
+# maka add Order, study ang Global ug para aha ang global sales
+def buy_phone():
+    global sales
+    while True:
+        show_menu()
+        choice = input("Select item number to buy (0 to finish): ")
+        if choice == "0":
+            break
+        if not choice.isdigit() or int(choice) < 1 or int(choice) > len(brands):
+            print("Invalid choice.")
+            continue
+        index = int(choice) - 1
+        if stocks[index] == 0:
+            print("Out of stock.")
+            continue
+        qty = int(input("Quantity: "))
+        if qty > stocks[index]:
+            print("Not enough stock.")
+            continue
+        total = prices[index] * qty
+        stocks[index] -= qty
+        sales += total
+        print(f"Bought {qty} {brands[index]} - Total ₱{total}")
+
+# Add stock
+def add_stock():
+    show_menu()
+    choice = input("Select item number to add stock: ")
+    if not choice.isdigit() or int(choice) < 1 or int(choice) > len(brands):
+        print("Invalid choice.")
+        return
+    index = int(choice) - 1
+    qty = int(input("Enter quantity to add: "))
+    stocks[index] += qty
+    print(f"Added {qty} units to {brands[index]}.")
+
+# View stock
+def view_stock():
+    show_menu()
+
+# View total sales
+def view_sales():
+    print(f"Total Sales: ₱{sales}")
+
+# Main program
+def main():
+    if not login():
+        return
+    while True:
+        print("\n1. Add/View Stock\n2. Buy Phone\n3. View Total Sales\n4. Exit")
+        choice = input("Choice: ")
+        if choice == "1":
+            add_stock()
+        elif choice == "2":
+            buy_phone()
+        elif choice == "3":
+            view_sales()
+        elif choice == "4":
+            print("Exiting. Thank you!")
+            break
+        else:
+            print("Invalid choice.")
+
+main()
